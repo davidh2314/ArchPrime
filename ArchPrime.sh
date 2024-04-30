@@ -117,6 +117,34 @@ network_installer () {
     esac
 }
 
+# Function to select desktop environment
+desktop_selector () {
+    info_print "Desktop environments:"
+    info_print "1) GNOME"
+    info_print "2) KDE Plasma"
+    info_print "3) Xfce"
+    input_print "Please select the number of the corresponding desktop environment (e.g. 1): "
+    read -r desktop_choice
+    case $desktop_choice in
+        1 ) desktop_packages="gnome gnome-extra"
+            ;;
+        2 ) desktop_packages="plasma-meta"
+            ;;
+        3 ) desktop_packages="xfce4 xfce4-goodies"
+            ;;
+        * ) error_print "You did not enter a valid selection, proceeding without a desktop environment."
+            return
+            ;;
+    esac
+
+    # Install the selected desktop environment
+    info_print "Installing $desktop_packages."
+    pacstrap /mnt $desktop_packages >/dev/null
+}
+
+# Call desktop_selector function
+desktop_selector
+
 # User enters a password for the LUKS Container (function).
 lukspass_selector () {
     input_print "Please enter a password for the LUKS container (you're not going to see the password): "
